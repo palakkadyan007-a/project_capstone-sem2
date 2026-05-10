@@ -8,13 +8,18 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : []
   })
 
-  const [darkMode, setDarkMode] = useState(false)
+  // Dark mode ON by default
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved !== null ? JSON.parse(saved) : true
+  })
 
   useEffect(() => {
     localStorage.setItem('sessions', JSON.stringify(sessions))
   }, [sessions])
 
   useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode))
     if (darkMode) {
       document.documentElement.classList.add('dark')
     } else {
@@ -27,9 +32,7 @@ export const AppProvider = ({ children }) => {
   }
 
   return (
-    <AppContext.Provider
-      value={{ sessions, addSession, darkMode, setDarkMode }}
-    >
+    <AppContext.Provider value={{ sessions, addSession, darkMode, setDarkMode }}>
       {children}
     </AppContext.Provider>
   )
